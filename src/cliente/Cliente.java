@@ -1,4 +1,8 @@
+package cliente;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -12,6 +16,7 @@ public class Cliente {
     //IP del servidor
     public static final String IP_SERVER = "localhost";
     private static int numero;
+
 
 
     public static void main(String[] args) {
@@ -71,15 +76,12 @@ public class Cliente {
                     break;
                 case 5:
                     System.out.println("CLIENTE: Saliendo de la aplicacion");
+                    mandarPeticion("FIN", direccionServidor, socketAlServidor);
                     break;
             }
 
-
-            //Observese como no conviertos los datos a enteros, ya que cuando
-            //se mandan a traves de un socket se mandan SIEMPRE en formato cadena
-
             //Establecemos la conexión
-            System.out.println("CLIENTE: Esperando a que el servidor acepte la conexión");
+            System.out.println("CLIENTE: Esperando a que el servidor acepte la conexi�n");
             socketAlServidor.connect(direccionServidor);
             System.out.println("CLIENTE: Conexion establecida... a " + IP_SERVER
                     + " por el puerto " + PUERTO);
@@ -87,6 +89,7 @@ public class Cliente {
             //Creamos el objeto que nos permite mandar informacion al servidor
             PrintStream salida = new PrintStream(socketAlServidor.getOutputStream());
 
+            recibirRespuesta(socketAlServidor);
 
         }catch (UnknownHostException e) {
             System.err.println("CLIENTE: No encuentro el servidor en la dirección" + IP_SERVER);
@@ -98,9 +101,30 @@ public class Cliente {
             System.err.println("CLIENTE: Error -> " + e);
             e.printStackTrace();
         }
+
     }
 
     public static void mandarPeticion(String opcion, InetSocketAddress direccionServidor, Socket socketAlServidor) throws IOException {
+        //Creamos el objeto que nos permite mandar informacion al servidor
+        PrintStream salida = new PrintStream(socketAlServidor.getOutputStream());
+        //Mandamos la informaci�n por el Stream
+        salida.println(opcion);
+    }
+
+    public static void recibirRespuesta(Socket socketAlServidor) throws IOException {
+        //Creamos el objeto que nos va a permitir leer la salida del servidor
+        InputStreamReader entrada = new InputStreamReader(socketAlServidor.getInputStream());
+
+        //Esta clase nos ayuda a leer datos del servidor linea a linea en vez de
+        //caracter a caracter como la clase InputStreamReader
+        BufferedReader bf = new BufferedReader(entrada);
+
+        System.out.println("CLIENTE: Esperando al resultado del servidor...");
+        //En la siguiente linea se va a quedar parado el hilo principal
+        //de ejecuci�n hasta que el servidor responda, es decir haga un println
+        String resultado = bf.readLine();//7
+
+        System.out.println("CLIENTE: El resultado de la suma es: " + resultado);//7
 
     }
 }
