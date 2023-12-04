@@ -17,6 +17,10 @@ public class Pelicula {
         this.precio = precio;
     }
 
+    public Pelicula() {
+
+    }
+
     public String getId() {
         return id;
     }
@@ -75,5 +79,33 @@ public class Pelicula {
         peliculas.add("3-El último aliento-Jane Smith-2023");
         peliculas.add("4-El enigma del tiempo-Charlie Brown-2024");
         peliculas.add("5-El jardín secreto-Emily Davis-2025");
+    }
+
+    public String consultarPeliculaPorId(int i) {
+        return peliculas.get(i-1);
+    }
+
+    public String consultarPeliculaPorTitulo(String titulo) {
+        String pelicula = "";
+        for (String p : peliculas) {
+            if (p.contains(titulo)) {
+                pelicula = p;
+            }
+        }
+        return pelicula;
+    }
+
+    public String consultarPeliculaPorDirector(String director) {
+        String pelicula = "";
+        for (String p : peliculas) {
+            if (p.contains(director)) {
+                pelicula = p;
+            }
+        }
+        return pelicula;
+    }
+
+    public void agregarPelicula(String pelicula) {
+        peliculas.add(pelicula);
     }
 }
