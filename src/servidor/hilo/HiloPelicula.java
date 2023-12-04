@@ -10,7 +10,12 @@ public class HiloPelicula implements Runnable {
     private Thread hilo;
     private static int numCliente = 0;
     private Socket socketAlCliente;
+
     public HiloPelicula(Socket socketAlCliente) {
+        numCliente++;
+        hilo = new Thread(this, "Cliente_"+numCliente);
+        this.socketAlCliente = socketAlCliente;
+        hilo.start();
     }
 
     @Override
@@ -39,10 +44,33 @@ public class HiloPelicula implements Runnable {
                     System.out.println(hilo.getName() + " ha cerrado la comunicacion");
                     continuar = false;
                 } else {
-                    // La opcion del cliente de 1-4
-                   
-                    
-                    
+                    String stringRecibido = entradaBuffer.readLine();
+                    //Hay que tener en cuenta que toda comunicacion entre cliente y servidor
+                    //esta en formato de cadena de texto
+                    System.out.println("SERVIDOR: Me ha llegado del cliente: " + stringRecibido);
+                    //Como sabemos que el cliente nos envia (opcion-, hacemos un split por "-"
+                    //para obtener la información.
+                    String[] opciones = stringRecibido.split("-");
+                    int numero = Integer.parseInt(opciones[0]);
+
+                    switch (numero){
+                        case 1:
+                            System.out.println("SERVIDOR: el cliente ha elegido peliculas");
+                            break;
+                        case 2:
+                            System.out.println("SERVIDOR: Listando peliculas por director");
+                            break;
+                        case 3:
+                            System.out.println("SERVIDOR: Listando peliculas por año");
+                            break;
+                        case 4:
+                            System.out.println("SERVIDOR: Añadiendo pelicula");
+                            break;
+                        case 5:
+                            System.out.println("SERVIDOR: Saliendo de la aplicacion");
+                            break;
+                    }
+
                     //Le mandamos la respuesta al cliente
                     salida.println(); // Todo
                 }

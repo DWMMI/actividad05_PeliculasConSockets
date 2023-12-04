@@ -33,6 +33,13 @@ public class Cliente {
         //finally, creando muchas m�s lineas para ello.
         try (Scanner sc = new Scanner(System.in);
              Socket socketAlServidor = new Socket()) {
+            //Establecemos la conexión
+            System.out.println("CLIENTE: Esperando a que el servidor acepte la conexión");
+            socketAlServidor.connect(direccionServidor);
+            System.out.println("CLIENTE: Conexion establecida... a " + IP_SERVER
+                    + " por el puerto " + PUERTO);
+            //Creamos el objeto que nos permite mandar informacion al servidor
+            PrintStream salida = new PrintStream(socketAlServidor.getOutputStream());
             //Mostrar el menu
             System.out.println("MENU:");
             System.out.println("1. Consultar peliculas por ID");
@@ -51,18 +58,21 @@ public class Cliente {
                     String id = sc.nextLine();
                     String opcion = "1-" + id;
                     mandarPeticion(opcion, direccionServidor, socketAlServidor);
+                    recibirRespuesta(socketAlServidor);
                     break;
                 case 2:
                     System.out.println("CLIENTE: Introduzca el titulo de la pelicula");
                     String titulo = sc.nextLine();
                     String opcion2 = "2-" + titulo;
                     mandarPeticion(opcion2, direccionServidor, socketAlServidor);
+                    recibirRespuesta(socketAlServidor);
                     break;
                 case 3:
                     System.out.println("CLIENTE: Introduzca el director de la pelicula");
                     String director = sc.nextLine();
                     String opcion3 = "3-" + director;
                     mandarPeticion(opcion3, direccionServidor, socketAlServidor);
+                    recibirRespuesta(socketAlServidor);
                     break;
                 case 4:
                     System.out.println("CLIENTE: Introduzca el titulo de la pelicula");
@@ -73,23 +83,19 @@ public class Cliente {
                     String anio = sc.nextLine();
                     String opcion4 = "4-" + titulo2 + "-" + director2 + "-" + anio;
                     mandarPeticion(opcion4, direccionServidor, socketAlServidor);
+                    recibirRespuesta(socketAlServidor);
                     break;
                 case 5:
                     System.out.println("CLIENTE: Saliendo de la aplicacion");
                     mandarPeticion("FIN", direccionServidor, socketAlServidor);
+                    recibirRespuesta(socketAlServidor);
                     break;
             }
 
-            //Establecemos la conexión
-            System.out.println("CLIENTE: Esperando a que el servidor acepte la conexi�n");
-            socketAlServidor.connect(direccionServidor);
-            System.out.println("CLIENTE: Conexion establecida... a " + IP_SERVER
-                    + " por el puerto " + PUERTO);
 
-            //Creamos el objeto que nos permite mandar informacion al servidor
-            PrintStream salida = new PrintStream(socketAlServidor.getOutputStream());
 
-            recibirRespuesta(socketAlServidor);
+
+
 
         }catch (UnknownHostException e) {
             System.err.println("CLIENTE: No encuentro el servidor en la dirección" + IP_SERVER);
@@ -122,9 +128,9 @@ public class Cliente {
         System.out.println("CLIENTE: Esperando al resultado del servidor...");
         //En la siguiente linea se va a quedar parado el hilo principal
         //de ejecuci�n hasta que el servidor responda, es decir haga un println
-        String resultado = bf.readLine();//7
+        String resultado = bf.readLine();
 
-        System.out.println("CLIENTE: El resultado de la suma es: " + resultado);//7
+        System.out.println("CLIENTE: " + resultado);
 
     }
 }

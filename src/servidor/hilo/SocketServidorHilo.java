@@ -30,6 +30,7 @@ public class SocketServidorHilo {
                 //Abrimos un hilo nuevo y liberamos el hilo principal para que pueda
                 //recibir peticiones de otros clientes
                 new HiloPelicula(socketAlCliente);
+
             }
         } catch (IOException e) {
             System.err.println("SERVIDOR: Error de entrada/salida");
